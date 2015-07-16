@@ -2,22 +2,20 @@ angular.module('appServices', [])
   .factory('AuthenticationService', [
     '$window', '$location',
     function($window, $location) {
-      var is_authenticated = false;
-      var user_name = '';
       var auth = {
-        getUserName: function() { return user_name; },
+        getUserName: function() {
+          return $window.localStorage.username; },
 
-        isAuthenticated: function() { return is_authenticated; },
+        isAuthenticated: function() { return $window.localStorage.token; },
 
         login: function(username, token) {
-          is_authenticated = true;
-          user_name = username;
-          $window.sessionStorage.token = token;
+          $window.localStorage.token = token;
+          $window.localStorage.username = username;
         },
 
         logout: function() {
-          is_authenticated = false;
-          delete $window.sessionStorage.token;
+          delete $window.localStorage.token;
+          delete $window.localStorage.username;
           $location.path("/login");
         },
       };
