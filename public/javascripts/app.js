@@ -7,6 +7,10 @@ angular.module('app', ['ngRoute', 'appServices']).
         templateUrl: '/partials/login.form.html',
         controller: 'loginCtrl'
       }).
+      when('/signUp', {
+        templateUrl: '/partials/signup.form.html',
+        controller: 'loginCtrl'
+      }).
       when('/', {
         templateUrl: '/partials/main.html',
         controller: 'loginCtrl',
