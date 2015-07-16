@@ -11,6 +11,7 @@ angular.module('appServices', [])
         login: function(username, token) {
           $window.localStorage.token = token;
           $window.localStorage.username = username;
+          $location.path("/");
         },
 
         logout: function() {
