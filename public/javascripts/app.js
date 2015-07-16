@@ -23,7 +23,7 @@ angular.module('app', ['ngRoute', 'appServices']).
            // Redirect to login page if our authservice (isAuthenticated) is false and no token
            if (nextRoute != null && nextRoute.access != null &&
                nextRoute.access.requiredAuthentication &&
-               !AuthenticationService.isAuthenticated() && !$window.sessionStorage.token) {
+               !AuthenticationService.isAuthenticated()) {
 
              console.log('Auth required, Redirect to login page');
              $location.path('/login');
