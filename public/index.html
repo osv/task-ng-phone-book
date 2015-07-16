@@ -28,7 +28,12 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li ng-hide="signedIn()"><a href="#/login">Sing in</a></li>
-            <li ng-show="signedIn()"><a href="#/logout">Logout</a></li>
+            <li ng-show="signedIn()">
+              <a ng-click="logOut()" href="#/login">
+                {{username}}
+                <i class="glyphicon glyphicon-log-out"></i>
+              </a>
+            </li>
           </ul>
         </div>
       </div>
