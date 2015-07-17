@@ -2,7 +2,9 @@ var express = require('express'),
     config = require('../config/config.js'),
     secretKey = config.secret,
     jwt = require('express-jwt'),
+    tokenManager = require('../config/token_manager.js'),
     userRoute = require('./ctrl_api_user.js'),
+    contactRoute = require('./ctrl_api_contacts.js'),
     router = express.Router();
 
 // Prepare REST (CORS)
@@ -24,5 +26,10 @@ router.
 
   // remove saved token if signed in
   get('/user/logout',    jwt({secret: secretKey}), userRoute.logout);
+
+router.
+  // create new contact
+  post('/contacts',      jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.create);
+
 
 module.exports = router;
