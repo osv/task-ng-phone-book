@@ -16,7 +16,7 @@
 
   <body ng-app="app">
     <div class="container col-sm-12">
-      <div class="navbar navbar-default" ng-controller="navBarCtrl">
+      <div class="navbar navbar-default" ng-controller="loginCtrl">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -28,8 +28,8 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li ng-hide="signedIn()"><a href="#/login">Sing in</a></li>
-            <li ng-show="signedIn()">
+            <li ng-hide="isSignedIn()"><a href="#/login">Sing in</a></li>
+            <li ng-show="isSignedIn()">
               <a ng-click="logOut()" href="#/login">
                 {{username}}
                 <i class="glyphicon glyphicon-log-out"></i>
