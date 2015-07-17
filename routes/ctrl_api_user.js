@@ -10,7 +10,7 @@ exports.register = function(req, res) {
       password = req.body.password || '';
 
   if (username === '' || password === '') {
-    return res.send(400);
+    return res.sendStatus(400);
   }
 
   // new user
@@ -21,9 +21,9 @@ exports.register = function(req, res) {
   user.save(function(err) {
     if (err) {
       console.log(err);
-      return res.send(500);
+      return res.sendStatus(500);
     }
-    return res.send(200);
+    return res.sendStatus(200);
   });
 };
 
@@ -33,27 +33,27 @@ exports.signin = function(req, res) {
       password = req.body.password || '';
 
   if (username === '' || password === '') {
-    return res.send(401);
+    return res.sendStatus(401);
   }
 
   db.userModel.findOne({username: username}, function (err, user) {
     if (err) {
       console.log(err);
-      return res.send(500);
+      return res.sendStatus(500);
     }
 
     if (!user) {
-      return res.send(401);
+      return res.sendStatus(401);
     }
 
     user.checkPassword(password, function(err, ok) {
       if (err) {
         console.log(err);
-        return res.send(500);
+        return res.sendStatus(500);
       }
       if (!ok) {
         console.log('Attempt failed to login with ' + user.username);
-        return res.send(401);
+        return res.sendStatus(401);
       }
 
       var token = jwt.sign({id: user._id},
@@ -70,9 +70,9 @@ exports.logout = function(req, res) {
     tokenManager.expireToken(req.headers);
 
     delete req.user;
-    return res.send(200);
+    return res.sendStatus(200);
   }
   else {
-    return res.send(401);
+    return res.sendStatus(401);
   }
 };
