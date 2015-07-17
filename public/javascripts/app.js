@@ -4,6 +4,15 @@ $.extend(toastr.options, {
   progressBar: true,
 });
 
+// use this in "catch" of promise
+var promiseLogError = function(error) {
+  var status = error.status,
+      message = error.statusText;
+
+  toastr.error('<b>' + status + '</b> ' + message);
+  console.warn(status, message);
+};
+
 angular.module('app', ['ngRoute', 'appServices']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.
