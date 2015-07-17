@@ -65,6 +65,10 @@ angular.module('app').
 
         ContactService
           .create(contact)
+          .then(function() {
+            toastr.success('Contact "' + contact.firstName + '" saved');
+            $scope.contact = {};
+          })
           .catch(promiseLogError);
       };
     }
