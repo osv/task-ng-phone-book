@@ -1,7 +1,10 @@
 <ul class="list-group">
-  <li class="list-group-item">fdsfsd</li>
-  <li class="list-group-item">dfsdf</li>
-  <li class="list-group-item">dfsdf</li>
+  <li class="list-group-item" ng-class="{'active':isSelected(contact)}" ng-repeat="contact in contacts">
+    <a ng-click="select(contact.id)" href="#/">
+      <p class="list-group-item-text">{{contact.firstname}}</p>
+    </a>
+  </li>
 </ul>
-<button class="btn btn-default">add</button>
-<button class="btn btn-danger">remove</button>
+
+<button class="btn btn-default" ng-click="new()" >add</button>
+<button class="btn btn-danger" ng-click="removeSelected()">remove</button>

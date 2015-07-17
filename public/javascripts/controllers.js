@@ -6,8 +6,8 @@ angular.module('app').
       $scope.signIn = function(username, password) {
 
         UserService.signIn(username, password)
-          .then(function(json) {
-            var token = json.token;
+          .then(function(res) {
+            var token = res.data.token;
             // save token and username
             AuthenticationService.login(username, token);
             // popup info box
@@ -19,8 +19,8 @@ angular.module('app').
       $scope.signUp = function(username, password) {
         if (! AuthenticationService.isAuthenticated()) {
           UserService.register(username, password)
-            .then(function(json) {
-              var token = json.token;
+            .then(function(res) {
+              var token = res.data.token;
               AuthenticationService.login(username, token);
               toastr.success('Hello, ' + username);
             })
@@ -30,8 +30,10 @@ angular.module('app').
 
       $scope.logOut = function() {
         if (AuthenticationService.isAuthenticated()) {
-          UserService.logOut();
-          AuthenticationService.logout();
+          UserService.logOut()
+            .finally(function() {
+              AuthenticationService.logout();
+          });
         }
       };
 
