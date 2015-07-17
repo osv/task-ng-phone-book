@@ -38,3 +38,12 @@ exports.expireToken = function(headers) {
 		cache.put(token, true, TOKEN_EXPIRATION_MILSEC);
 	}
 };
+
+// Remove token, May be used in logout route.
+exports.removeToken = function(headers) {
+	var token = getTokenFromHeader(headers);
+
+	if (token) {
+		cache.del(token);
+	}
+};
