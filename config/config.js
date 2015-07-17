@@ -13,4 +13,7 @@ if (!secret) {
   console.warn('Using default secret, you need to set env variable "SECRET"');
 }
 
+// jwt token expiration in minutes
+config.TOKEN_EXPIRATION = 60;
+
 module.exports = config;
