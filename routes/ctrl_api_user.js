@@ -60,6 +60,8 @@ exports.signin = function(req, res) {
                            secretKey,
                            { expiresInMinutes: TOKEN_EXPIRATION });
 
+      tokenManager.saveToken(token);
+
       return res.json({token:token});
     });
   });
@@ -67,7 +69,7 @@ exports.signin = function(req, res) {
 
 exports.logout = function(req, res) {
   if (req.user) {
-    tokenManager.expireToken(req.headers);
+    tokenManager.removeToken(req.headers);
 
     delete req.user;
     return res.sendStatus(200);

@@ -25,15 +25,13 @@ exports.verifyToken = function (req, res, next) {
   if (t) {
     next();
   } else {
-    res.send(401);
+    res.sendStatus(401);
   }
 };
 
 // Save token in memory.
 // Token is expirable by config.TOKEN_EXPIRATION time in minutes
-exports.expireToken = function(headers) {
-	var token = getTokenFromHeader(headers);
-
+exports.saveToken = function(token) {
 	if (token) {
 		cache.put(token, true, TOKEN_EXPIRATION_MILSEC);
 	}
