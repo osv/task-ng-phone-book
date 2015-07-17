@@ -26,14 +26,24 @@ angular.module('app', ['ngRoute', 'appServices']).
       }).
       when('/', {
         templateUrl: '/partials/main.html',
-        controller: 'loginCtrl',
+        controller: 'contactCtrl',
         access: { requiredAuthentication: true }
       });
-  }]).
-  config(['$httpProvider', function ($httpProvider) {
+  }])
+
+  .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('TokenInterceptor');
-  }]).
-  run(['$rootScope', '$location', '$window', 'AuthenticationService',
+  }])
+
+  .filter('formatContact', function() {
+    return function(contact) {
+      var firstName = contact.firstName,
+          secondName = contact.surName || '';
+      return firstName + ' ' + secondName;
+    };
+  })
+
+  .run(['$rootScope', '$location', '$window', 'AuthenticationService',
        function($rootScope, $location, $window, AuthenticationService) {
          $rootScope.$on('$routeChangeStart', function(event, nextRoute, currentRoute) {
            // Redirect to login page if our authservice (isAuthenticated) is false and no token

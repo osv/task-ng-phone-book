@@ -41,4 +41,31 @@ angular.module('app').
         $scope.username = AuthenticationService.getUserName();
         return AuthenticationService.isAuthenticated();
       };
-    }]);
+    }])
+
+  .controller('contactCtrl', [
+    '$scope', 'ContactService',
+    function($scope, ContactService) {
+
+      // debug
+      $scope.contacts = [
+        {firstName: "John", _id: "12"},
+        {firstName: "Olex", surName: 'Syd',_id: "34"},
+      ];
+
+      $scope.select = function(id) {
+        $scope.selectedContact = id;
+      };
+      $scope.isSelected = function(contact) {
+        return $scope.selectedContact === contact._id;
+      };
+
+      $scope.saveContact = function() {
+        var contact = $scope.contact;
+
+        ContactService
+          .create(contact)
+          .catch(promiseLogError);
+      };
+    }
+  ]);

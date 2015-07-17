@@ -70,4 +70,17 @@ angular.module('appServices', [])
           return $q.reject(rejection);
         }
       };
-    }]);
+    }])
+
+  .factory('ContactService', [
+    '$http',
+    function($http) {
+      return {
+        create: function(contact) {
+          console.log('contact create', contact);
+
+          return $http.post(REST_URL + '/api/contacts', {contact: contact});
+        }
+      };
+    }
+  ]);

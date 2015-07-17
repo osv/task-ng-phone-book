@@ -2,28 +2,28 @@
     <label class="col-sm-3 control-label" for="fisrtName">First name</label>
 		<div class="col-sm-9">
 			<input type="text" class="form-control" id="fisrtName" placeholder="John"
-             ng-model="contact.firstname" required>
+             ng-model="$parent.contact.firstName" required>
 		</div>
   </div>
   <div class="form-group">
     <label class="col-sm-3 control-label" for="secondName">Second name</label>
 		<div class="col-sm-9">
 			<input type="text" class="form-control" id="secondName" placeholder="Doe"
-             ng-model="contact.surName">
+             ng-model="$parent.contact.surName">
 		</div>
   </div>
   <div class="form-group">
     <label class="col-sm-3 control-label" for="secondName">Tel No</label>
 		<div class="col-sm-9">
 			<input type="text" class="form-control" id="secondName" placeholder="Example: +380661234567"
-             ng-model="contact.phone">
+             ng-model="$parent.contact.phone">
 		</div>
   </div>
   <div class="form-group">
     <label class="col-sm-3 control-label" for="secondName">Comments</label>
 		<div class="col-sm-9">
       <textarea class="form-control" id="comment" cols="10" placeholder="Some comment here"
-                ng-model="contact.comment"></textarea>
+                ng-model="$parent.contact.comment"></textarea>
 		</div>
   </div>
 <div class="form-group">
