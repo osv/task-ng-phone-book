@@ -4,11 +4,17 @@ angular.module('appServices', [])
   .factory('AuthenticationService', [
     '$window', '$location',
     function($window, $location) {
+      var getToken = function() {
+        return $window.localStorage.token;
+      };
+
       var auth = {
         getUserName: function() {
           return $window.localStorage.username; },
 
-        isAuthenticated: function() { return $window.localStorage.token; },
+        isAuthenticated: function() { return !!getToken(); },
+
+        token: getToken,
 
         login: function(username, token) {
           $window.localStorage.token = token;
@@ -40,4 +46,28 @@ angular.module('appServices', [])
         return $http.post(REST_URL + '/api/user/register', {username: username, password: password});
       }
     };
-  }]);
+  }])
+
+  .factory('TokenInterceptor', [
+    '$q', 'AuthenticationService',
+    function ($q, AuthenticationService) {
+      return {
+        // Add Authorization header if user signed in
+        request: function (config) {
+          config.headers = config.headers || {};
+          if (AuthenticationService.isAuthenticated()) {
+            config.headers.Authorization = 'Bearer ' + AuthenticationService.token();
+          }
+          return config;
+        },
+
+        // Revoke client authentication if 401 is received
+        responseError: function(rejection) {
+          if (rejection != null && rejection.status === 401) {
+            AuthenticationService.logout();
+          }
+
+          return $q.reject(rejection);
+        }
+      };
+    }]);

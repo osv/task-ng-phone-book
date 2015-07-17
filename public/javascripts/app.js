@@ -30,6 +30,9 @@ angular.module('app', ['ngRoute', 'appServices']).
         access: { requiredAuthentication: true }
       });
   }]).
+  config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push('TokenInterceptor');
+  }]).
   run(['$rootScope', '$location', '$window', 'AuthenticationService',
        function($rootScope, $location, $window, AuthenticationService) {
          $rootScope.$on('$routeChangeStart', function(event, nextRoute, currentRoute) {
