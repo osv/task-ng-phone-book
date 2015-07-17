@@ -21,8 +21,7 @@ var User = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   created: { type: Date, default: Date.now }
-}, {
-  autoIndex: false });
+});
 
 var Contact = new Schema({
   userId: {type: Schema.Types.ObjectId, required: true}, // ref to user
@@ -32,10 +31,8 @@ var Contact = new Schema({
   content: { type: String },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-},{
-  autoIndex: false });
+});
 
-User.index({ username: 1 });
 Contact.index({ userId: 1, created: -1 });
 
 User.pre('save', function(cb) {
