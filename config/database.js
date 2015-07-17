@@ -26,9 +26,9 @@ var User = new Schema({
 var Contact = new Schema({
   userId: {type: Schema.Types.ObjectId, required: true}, // ref to user
   firstName: { type: String, required: true },
-  surName: {type: String, required: true},
-  phone: {type: String, required: true},
-  content: { type: String },
+  surName: {type: String},
+  phone: {type: String},
+  comment: { type: String },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
 });
@@ -61,7 +61,7 @@ User.methods = {
 
 // Models
 var userModel = mongoose.model('User', User);
-var contactModel = mongoose.model('Post', Contact);
+var contactModel = mongoose.model('Contact', Contact);
 
 exports.userModel = userModel;
 exports.contactModel = contactModel;
