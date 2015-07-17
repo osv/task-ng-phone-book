@@ -1,5 +1,9 @@
 'use strict';
 
+$.extend(toastr.options, {
+  progressBar: true,
+});
+
 angular.module('app', ['ngRoute', 'appServices']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.
