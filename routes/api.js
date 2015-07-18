@@ -29,7 +29,8 @@ router.
 
 router.
   // create new contact
-  post('/contacts',      jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.create);
+  post('/contacts',      jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.create).
 
+  get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list);
 
 module.exports = router;

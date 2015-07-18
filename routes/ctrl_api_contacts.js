@@ -33,3 +33,23 @@ exports.create = function(req, res) {
     return res.sendStatus(200);
   });
 };
+
+exports.list = function(req, res) {
+  var user = req.user;
+  if (! user) {
+    return res.sendStatus(401);
+  }
+
+  var userId = user.id,
+      query = db.contactModel.find({userId: userId});
+
+  query.select('_id firstName surName');
+  query.sort('-created');
+  query.exec(function(err, results) {
+    if (err) {
+      console.log(err);
+      return res.sendStatus(400);
+    }
+    return res.json(200, results);
+  });
+};

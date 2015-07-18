@@ -77,9 +77,11 @@ angular.module('appServices', [])
     function($http) {
       return {
         create: function(contact) {
-          console.log('contact create', contact);
-
           return $http.post(REST_URL + '/api/contacts', {contact: contact});
+        },
+
+        list: function() {
+          return $http.get(REST_URL + '/api/contacts');
         }
       };
     }

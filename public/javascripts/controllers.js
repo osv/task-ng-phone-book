@@ -47,11 +47,12 @@ angular.module('app').
     '$scope', 'ContactService',
     function($scope, ContactService) {
 
-      // debug
-      $scope.contacts = [
-        {firstName: "John", _id: "12"},
-        {firstName: "Olex", surName: 'Syd',_id: "34"},
-      ];
+      ContactService.list()
+        .then(function(res) {
+          $scope.contacts = res.data;
+          console.log(res.data);
+        })
+        .catch(promiseLogError);
 
       $scope.select = function(id) {
         $scope.selectedContact = id;
