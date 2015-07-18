@@ -13,7 +13,7 @@ var promiseLogError = function(error) {
   console.warn(status, message);
 };
 
-angular.module('app', ['ngRoute', 'appServices']).
+angular.module('app', ['ngRoute', 'appServices', 'ngFileUpload']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.
       when('/login', {

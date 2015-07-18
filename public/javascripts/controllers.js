@@ -44,8 +44,8 @@ angular.module('app').
     }])
 
   .controller('contactCtrl', [
-    '$scope', 'ContactService',
-    function($scope, ContactService) {
+    '$scope', 'Upload', 'ContactService',
+    function($scope, Upload, ContactService) {
       $scope.contacts = [];
 
       // promise for fetch contact list, we reuse it later in this controller
@@ -58,6 +58,17 @@ angular.module('app').
         .catch(promiseLogError);
       };
 
+      // resuable, set contactPhoto, prevent cache it by browser
+      function setContactPhoto() {
+        var contact = $scope.contact;
+        if (contact._id) {
+          var random = + new Date();
+          $scope.contactPhoto = '/uploads/' + contact._id + '.png?r' + random;
+        } else {
+          $scope.contactPhoto = '';
+        }
+      }
+
       fetchContacts();
 
       // on selecect from contact list: fetch full contact data
@@ -65,7 +76,9 @@ angular.module('app').
 //        $scope.selectedContact = id;
         ContactService.read(id)
           .then(function(res) {
-            $scope.contact = res.data;
+            var contact = res.data;
+            $scope.contact = contact;
+            setContactPhoto();
           })
           .catch(promiseLogError);
       };
@@ -117,6 +130,31 @@ angular.module('app').
             })
             .catch(promiseLogError);
         }
+      };
+
+      $scope.upload = function(files) {
+        var file = files[0],
+            contact = $scope.contact;
+
+        if (! file || ! contact) {
+          return;
+        }
+
+        if (! contact._id) {
+          toastr.info('Save contact first');
+          return;
+        }
+
+        console.log('file', file);
+
+        Upload.upload({
+          url: '/api/upload',
+          fields: contact,
+          file: file
+        })
+          .then(function() {
+            setContactPhoto();
+          });
       };
     }
   ]);
