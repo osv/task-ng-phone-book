@@ -4,30 +4,40 @@ var db = require('../config/database.js'),
     path = require('path'),
     fs = require('fs');
 
+// create contact, cb is called with mongoose saved data
+var create_contact =  function(contact, cb) {
+  var newContact = new db.contactModel();
+
+  newContact.userId = contact.userId;
+  newContact.firstName = contact.firstName;
+  newContact.surName = contact.surName;
+  newContact.phone = contact.phone;
+  newContact.comment = contact.comment;
+
+  newContact.save(function(err, data) {
+    if (err) {
+      console.log(err);
+      return cb(new Error());
+    }
+    cb(null, data);
+  });
+};
+
 exports.create = function(req, res) {
 
-  var user = req.user,        // user is restored from jwt sign
+  var userId = req.user.id,        // user is restored from jwt sign
       contact = req.body.contact;
 
   if (contact.firstName == null) {
     return res.sendStatus(400);
   }
 
-  var newContact = new db.contactModel();
+  contact.userId = userId;      // set owner of this contact
 
-  newContact.userId = user.id; // owner of contact
-  newContact.firstName = contact.firstName;
-  newContact.surName = contact.surName;
-  newContact.phone = contact.phone;
-  newContact.comment = contact.comment;
-
-  newContact.save(function(err) {
+  create_contact(contact, function(err) {
     if (err) {
-      console.log(err);
-      return res.sendStatus(400);
+      return res.sendStatus(500);
     }
-    console.log('ok');
-
     return res.sendStatus(200);
   });
 };
