@@ -46,17 +46,23 @@ angular.module('app').
   .controller('contactCtrl', [
     '$scope', 'ContactService',
     function($scope, ContactService) {
+      $scope.contacts = [];
 
-      ContactService.list()
+      // promise for fetch contact list, we reuse it later in this controller
+      var fetchContacts = function() {
+        return ContactService.list()
         .then(function(res) {
           $scope.contacts = res.data;
           console.log(res.data);
         })
         .catch(promiseLogError);
+      };
+
+      fetchContacts();
 
       // on selecect from contact list: fetch full contact data
       $scope.select = function(id) {
-        $scope.selectedContact = id;
+//        $scope.selectedContact = id;
         ContactService.read(id)
           .then(function(res) {
             $scope.contact = res.data;
@@ -64,8 +70,13 @@ angular.module('app').
           .catch(promiseLogError);
       };
 
+      // clear current "contact" model
+      $scope.new = function() {
+        $scope.contact = {};
+      };
+
       $scope.isSelected = function(contact) {
-        return $scope.selectedContact === contact._id;
+        return $scope.contact && $scope.contact._id === contact._id;
       };
 
       $scope.saveContact = function() {
@@ -74,15 +85,17 @@ angular.module('app').
         // Update or create contact depend in existing "_id" property of contact
         if (contact._id) {
           ContactService.update(contact)
+            .then(fetchContacts)
             .then(function() {
               toastr.success('Updated contact of ' + contact.firstName);
             })
             .catch(promiseLogError);
         } else {
           ContactService.create(contact)
-            .then(function() {
+            .then(fetchContacts)
+            .then(function(res) {
+              $scope.contact = {};              // clear model
               toastr.success('Contact "' + contact.firstName + '" saved');
-              $scope.contact = {};
             })
             .catch(promiseLogError);
         }
