@@ -19,6 +19,9 @@ angular.module('app').
       $scope.signUp = function(username, password) {
         if (! AuthenticationService.isAuthenticated()) {
           UserService.register(username, password)
+            .then(function() {
+              return UserService.signIn(username, password);
+            })
             .then(function(res) {
               var token = res.data.token;
               AuthenticationService.login(username, token);
