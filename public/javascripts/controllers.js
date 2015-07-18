@@ -79,6 +79,9 @@ angular.module('app').
         return $scope.contact && $scope.contact._id === contact._id;
       };
 
+      $scope.isNew = function() {
+        return ! ($scope.contact && $scope.contact.hasOwnProperty('_id'));
+      };
       $scope.saveContact = function() {
         var contact = $scope.contact;
 
