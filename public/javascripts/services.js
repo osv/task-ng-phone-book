@@ -73,8 +73,8 @@ angular.module('appServices', [])
     }])
 
   .factory('ContactService', [
-    '$http',
-    function($http) {
+    '$http', 'Upload',
+    function($http, Upload) {
       return {
         create: function(contact) {
           return $http.post(REST_URL + '/api/contacts', {contact: contact});
@@ -98,6 +98,14 @@ angular.module('appServices', [])
 
         removePhoto: function(id) {
           return $http['delete'](REST_URL + '/api/upload/' + id);
+        },
+
+        uploadPhoto: function(file, contact) {
+          return Upload.upload({
+            url: '/api/upload',
+            fields: contact,
+            file: file
+          });
         }
       };
     }

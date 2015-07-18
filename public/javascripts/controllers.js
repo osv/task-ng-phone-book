@@ -44,8 +44,8 @@ angular.module('app').
     }])
 
   .controller('contactCtrl', [
-    '$scope', 'Upload', 'ContactService',
-    function($scope, Upload, ContactService) {
+    '$scope', 'ContactService',
+    function($scope, ContactService) {
       $scope.contacts = [];
 
       // promise for fetch contact list, we reuse it later in this controller
@@ -129,11 +129,7 @@ angular.module('app').
           return;
         }
 
-        Upload.upload({
-          url: '/api/upload',
-          fields: contact,
-          file: file
-        })
+        ContactService.uploadPhoto(file, contact)
           .then(function(res) {
 
             // update current contact with new retrieved data
