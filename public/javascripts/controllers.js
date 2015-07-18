@@ -156,5 +156,16 @@ angular.module('app').
             setContactPhoto();
           });
       };
+
+      $scope.removePhoto = function() {
+        var contact = $scope.contact;
+        if (contact && contact._id) {
+          ContactService.removePhoto(contact._id)
+            .then(function() {
+              setContactPhoto();
+            })
+            .catch(promiseLogError);
+        }
+      };
     }
   ]);

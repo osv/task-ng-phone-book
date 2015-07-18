@@ -94,6 +94,10 @@ angular.module('appServices', [])
 
         remove: function(id) {
           return $http['delete'](REST_URL + '/api/contacts/' + id);
+        },
+
+        removePhoto: function(id) {
+          return $http['delete'](REST_URL + '/api/upload/' + id);
         }
       };
     }
