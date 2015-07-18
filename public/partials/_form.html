@@ -29,10 +29,13 @@
       <div class="row voffset">
         <div class="col-sm-12">
           <button type="button" class="btn btn-primary"
+                  ng-disabled="canUpload()"
                   ngf-accept="'image/*'" ngf-select ngf-change="upload($files)">
             Upload contact photo
           </button>
-          <button type="button" class="btn btn-danger" ng-click="removePhoto()">
+          <button type="button" class="btn btn-danger"
+                  ng-disabled="canRemoveUpload()"
+                  ng-click="removePhoto()">
             Remove
           </button>
         </div>

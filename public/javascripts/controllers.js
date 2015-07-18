@@ -62,7 +62,6 @@ angular.module('app').
 
       // on selecect from contact list: fetch full contact data
       $scope.select = function(id) {
-//        $scope.selectedContact = id;
         ContactService.read(id)
           .then(function(res) {
             var contact = res.data;
@@ -158,6 +157,16 @@ angular.module('app').
             })
             .catch(promiseLogError);
         }
+      };
+
+      // can upload only if firstName not empty because it required on create contact
+      $scope.canUpload = function() {
+        return ! ($scope.contact && $scope.contact.firstName && $scope.contact.firstName.length);
+      };
+
+      // if not set "photo" property of contact than cant remove uploaded photo
+      $scope.canRemoveUpload = function() {
+        return ! ($scope.contact && $scope.contact.photo && $scope.contact.photo.length);
       };
     }
   ]);
