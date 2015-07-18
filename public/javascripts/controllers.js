@@ -54,9 +54,16 @@ angular.module('app').
         })
         .catch(promiseLogError);
 
+      // on selecect from contact list: fetch full contact data
       $scope.select = function(id) {
         $scope.selectedContact = id;
+        ContactService.read(id)
+          .then(function(res) {
+            $scope.contact = res.data;
+          })
+          .catch(promiseLogError);
       };
+
       $scope.isSelected = function(contact) {
         return $scope.selectedContact === contact._id;
       };

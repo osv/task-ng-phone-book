@@ -44,3 +44,25 @@ exports.list = function(req, res) {
     return res.json(200, results);
   });
 };
+
+exports.read = function(req, res) {
+  var id = req.params.id;
+
+  if (!id) {
+    return res.sendStatus(400);
+  }
+
+  var query = db.contactModel.findOne({_id: id});
+  query.exec(function(err, result) {
+    if (err) {
+  		console.log(err);
+  		return res.sendStatus(400);
+  	}
+
+    if (result) {
+      return res.json(200, result);
+    } else {
+  		return res.sendStatus(400);
+    }
+  })
+}

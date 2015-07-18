@@ -82,6 +82,10 @@ angular.module('appServices', [])
 
         list: function() {
           return $http.get(REST_URL + '/api/contacts');
+        },
+
+        read: function(id) {
+          return $http.get(REST_URL + '/api/contacts/' + id);
         }
       };
     }

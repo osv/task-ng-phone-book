@@ -34,4 +34,7 @@ router.
   // get array of contatcs. Fields: _id, firstName, surName
   get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list).
 
+  // Get contact by id
+  get('/contacts/:id',   jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.read);
+
 module.exports = router;
