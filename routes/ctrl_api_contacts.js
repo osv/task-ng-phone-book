@@ -114,28 +114,34 @@ exports.uploadPhoto = function(req, res) {
   var files = req.files,
       tmpfile = files.file.path, // path where multipart middleware save
       userId = req.user.id,
-      contact = req.body;
+      contact = req.body,
+      contact_id = contact._id;
 
-  console.log('file stored: ', tmpfile);
-  console.log(contact);
-  console.log(contact._id);
+  // check if user is owner of this contact id, if so, remove file
+  var query = db.contactModel.findOne({_id: contact_id, userId: userId});
+  query.exec(function(err, result) {
+    if (err) {
+  		console.log(err);
+  		return res.sendStatus(400);
+  	}
 
+    if (!result) {
+      return res.sendStatus(400);
+    }
 
+    var contact_photo_fname = path.join(uploadDir, contact_id + '.png');
 
-  var contact_id = contact._id,
-      contact_photo_fname = path.join(uploadDir, contact_id + '.png');
-  console.log('contact_photo', contact_photo_fname);
+    try {
+      mkdirp.sync(uploadDir);
 
-  try {
-    mkdirp.sync(uploadDir);
+      //TODO: convert image to png, crop, etc
 
-    //TODO: convert image to png, crop, etc
-
-    fs.renameSync(tmpfile, contact_photo_fname);
-    res.sendStatus(200);
-  } catch (e) {
-    res.sendStatus(500);
-  }
+      fs.renameSync(tmpfile, contact_photo_fname);
+      res.sendStatus(200);
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
 };
 
 exports.deletePhoto = function(req, res) {
