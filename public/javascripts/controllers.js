@@ -71,7 +71,7 @@ angular.module('app').
       };
 
       // clear current "contact" model
-      $scope.new = function() {
+      $scope.create = function() {
         $scope.contact = {};
       };
 
