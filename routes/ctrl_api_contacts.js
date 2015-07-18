@@ -65,5 +65,24 @@ exports.read = function(req, res) {
     } else {
   		return res.sendStatus(400);
     }
-  })
-}
+  });
+};
+
+exports.update = function(req, res) {
+  var contact = req.body.contact,
+      userId = req.user.id;
+
+  if (!contact || contact.firstName == null) {
+    return res.sendStatus(400);
+  }
+
+  contact.updated = new Date();
+
+  db.contactModel.findOneAndUpdate({_id: contact._id, userId: userId}, contact, function(err) {
+    if (err) {
+  		console.log(err);
+  		return res.sendStatus(400);
+  	}
+		return res.send(200);
+	});
+};

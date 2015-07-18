@@ -35,6 +35,9 @@ router.
   get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list).
 
   // Get contact by id
-  get('/contacts/:id',   jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.read);
+  get('/contacts/:id',   jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.read).
+
+  // Update contact by id
+  put('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.update);
 
 module.exports = router;

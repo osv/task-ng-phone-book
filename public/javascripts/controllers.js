@@ -71,13 +71,21 @@ angular.module('app').
       $scope.saveContact = function() {
         var contact = $scope.contact;
 
-        ContactService
-          .create(contact)
-          .then(function() {
-            toastr.success('Contact "' + contact.firstName + '" saved');
-            $scope.contact = {};
-          })
-          .catch(promiseLogError);
+        // Update or create contact depend in existing "_id" property of contact
+        if (contact._id) {
+          ContactService.update(contact)
+            .then(function() {
+              toastr.success('Updated contact of ' + contact.firstName);
+            })
+            .catch(promiseLogError);
+        } else {
+          ContactService.create(contact)
+            .then(function() {
+              toastr.success('Contact "' + contact.firstName + '" saved');
+              $scope.contact = {};
+            })
+            .catch(promiseLogError);
+        }
       };
     }
   ]);
