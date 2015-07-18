@@ -1,5 +1,8 @@
 var db = require('../config/database.js'),
-    mongoose = require('mongoose');
+    uploadDir = require('../config/config.js').uploadDir,
+    mkdirp = require('mkdirp'),
+    path = require('path'),
+    fs = require('fs');
 
 exports.create = function(req, res) {
 
@@ -104,4 +107,33 @@ exports.delete = function(req, res) {
   	}
 		return res.sendStatus(200);
   });
+};
+
+exports.uploadPhoto = function(req, res) {
+  console.log(req.body, req.files);
+  var files = req.files,
+      tmpfile = files.file.path, // path where multipart middleware save
+      userId = req.user.id,
+      contact = req.body;
+
+  console.log('file stored: ', tmpfile);
+  console.log(contact);
+  console.log(contact._id);
+
+
+
+  var contact_id = contact._id,
+      contact_photo_fname = path.join(uploadDir, contact_id + '.png');
+  console.log('contact_photo', contact_photo_fname);
+
+  try {
+    mkdirp.sync(uploadDir);
+
+    //TODO: convert image to png, crop, etc
+
+    fs.renameSync(tmpfile, contact_photo_fname);
+    res.sendStatus(200);
+  } catch (e) {
+    res.sendStatus(500);
+  }
 };

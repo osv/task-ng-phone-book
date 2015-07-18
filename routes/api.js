@@ -1,4 +1,6 @@
 var express = require('express'),
+    multipart = require('connect-multiparty'),
+    multipartMiddleware = multipart(),
     config = require('../config/config.js'),
     secretKey = config.secret,
     jwt = require('express-jwt'),
@@ -42,5 +44,10 @@ router.
 
   // remove contact by id
   delete('/contacts/:id', jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.delete);
+
+router.
+  // upload image. body - contact object.
+  post('/upload', jwt({secret: secretKey}), tokenManager.verifyToken,
+       multipartMiddleware, contactRoute.uploadPhoto);
 
 module.exports = router;
