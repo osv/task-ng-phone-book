@@ -31,12 +31,12 @@
           <button type="button" class="btn btn-primary"
                   ng-disabled="canUpload()"
                   ngf-accept="'image/*'" ngf-select ngf-change="upload($files)">
-            Upload contact photo
+            <i class="glyphicon glyphicon-upload"></i>
           </button>
           <button type="button" class="btn btn-danger"
                   ng-disabled="canRemoveUpload()"
                   ng-click="removePhoto()">
-            Remove
+            <i class="glyphicon glyphicon-trash"></i>
           </button>
         </div>
       </div>
@@ -44,7 +44,7 @@
 		<div class="col-sm-9">
       <div class="row">
         <div class="col-sm-12">
-          <textarea class="form-control" id="comment" cols="10" placeholder="Some comment here"
+          <textarea class="form-control" id="comment" rows="10" placeholder="Some comment here"
                     ng-model="$parent.contact.comment"></textarea>
         </div>
       </div>
