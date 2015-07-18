@@ -18,7 +18,7 @@ if (! config.secret) {
 // image upload folder
 config.uploadDir = path.join(__dirname, '../public/uploads');
 
-// jwt token expiration in minutes
-config.TOKEN_EXPIRATION = 60;
+// jwt token expiration in minutes. 7 week
+config.TOKEN_EXPIRATION = 7 * 24 * 60;
 
 module.exports = config;
