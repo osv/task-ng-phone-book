@@ -48,6 +48,9 @@ router.
 router.
   // upload image. body - contact object.
   post('/upload', jwt({secret: secretKey}), tokenManager.verifyToken,
-       multipartMiddleware, contactRoute.uploadPhoto);
+       multipartMiddleware, contactRoute.uploadPhoto).
+
+  delete('/upload/:id', jwt({secret: secretKey}), tokenManager.verifyToken,
+         contactRoute.deletePhoto);
 
 module.exports = router;

@@ -137,3 +137,32 @@ exports.uploadPhoto = function(req, res) {
     res.sendStatus(500);
   }
 };
+
+exports.deletePhoto = function(req, res) {
+  var id = req.params.id,       // contact id
+      userId = req.user.id,
+      contact_photo_fname = path.join(uploadDir, id + '.png');
+
+  // check if user is owner of this id, if so, remove file
+  var query = db.contactModel.findOne({_id: id, userId: userId});
+  query.exec(function(err, result) {
+    if (err) {
+  		console.log(err);
+  		return res.sendStatus(400);
+  	}
+
+    if (!result) {
+      return res.sendStatus(400);
+    }
+
+    try {
+      console.log('unlink ' + contact_photo_fname);
+
+      fs.unlinkSync(contact_photo_fname);
+    } catch (e) {
+      return res.sendStatus(500);
+    }
+
+    return res.sendStatus(200);
+  });
+};
