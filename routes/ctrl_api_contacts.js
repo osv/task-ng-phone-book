@@ -46,13 +46,14 @@ exports.list = function(req, res) {
 };
 
 exports.read = function(req, res) {
-  var id = req.params.id;
+  var id = req.params.id,
+      userId = req.user.id;
 
   if (!id) {
     return res.sendStatus(400);
   }
 
-  var query = db.contactModel.findOne({_id: id});
+  var query = db.contactModel.findOne({_id: id, userId: userId});
   query.exec(function(err, result) {
     if (err) {
   		console.log(err);
