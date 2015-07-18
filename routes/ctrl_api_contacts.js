@@ -105,7 +105,11 @@ exports.delete = function(req, res) {
   		console.log(err);
   		return res.sendStatus(400);
   	}
-		return res.sendStatus(200);
+
+    var contact_photo_fname = path.join(uploadDir, id + '.png');
+    fs.unlink(contact_photo_fname);
+
+    return res.sendStatus(200);
   });
 };
 
