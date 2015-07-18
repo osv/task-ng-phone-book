@@ -21,7 +21,7 @@ router.
   // new user
   post('/user/register', userRoute.register).
 
-  // sign in
+  // sign in. Fields: "token"
   post('/user/signin',   userRoute.signin).
 
   // remove saved token if signed in
@@ -31,6 +31,7 @@ router.
   // create new contact
   post('/contacts',      jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.create).
 
-  get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list);
+  // get array of contatcs. Fields: _id, firstName, surName
+  get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list).
 
 module.exports = router;
