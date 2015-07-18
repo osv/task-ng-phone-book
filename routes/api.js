@@ -46,7 +46,7 @@ router.
   delete('/contacts/:id', jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.delete);
 
 router.
-  // upload image. body - contact object.
+  // upload image. body - contact object. return _id, photo, isNew - true if new created contact
   post('/upload', jwt({secret: secretKey}), tokenManager.verifyToken,
        multipartMiddleware, contactRoute.uploadPhoto).
 
