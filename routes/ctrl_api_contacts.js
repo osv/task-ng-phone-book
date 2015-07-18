@@ -83,6 +83,25 @@ exports.update = function(req, res) {
   		console.log(err);
   		return res.sendStatus(400);
   	}
-		return res.send(200);
+		return res.sendStatus(200);
 	});
+};
+
+exports.delete = function(req, res) {
+  var userId = req.user.id,
+      id = req.params.id;
+
+  if (!id) {
+    res.sendStatus(400);
+  }
+
+  var query = db.contactModel.remove({_id: id, userId: userId});
+
+  query.remove(function(err) {
+    if (err) {
+  		console.log(err);
+  		return res.sendStatus(400);
+  	}
+		return res.sendStatus(200);
+  });
 };

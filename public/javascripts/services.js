@@ -92,6 +92,9 @@ angular.module('appServices', [])
           return $http.put(REST_URL + '/api/contacts', {contact: contact});
         },
 
+        remove: function(id) {
+          return $http['delete'](REST_URL + '/api/contacts/' + id);
+        }
       };
     }
   ]);

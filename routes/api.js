@@ -37,7 +37,10 @@ router.
   // Get contact by id
   get('/contacts/:id',   jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.read).
 
-  // Update contact by id
-  put('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.update);
+  // Update contact
+  put('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.update).
+
+  // remove contact by id
+  delete('/contacts/:id', jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.delete);
 
 module.exports = router;

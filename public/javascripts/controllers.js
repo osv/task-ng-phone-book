@@ -75,6 +75,21 @@ angular.module('app').
         $scope.contact = {};
       };
 
+      $scope.removeSelected = function() {
+        var contact = $scope.contact;
+
+        if (! contact || ! contact._id) {
+          return;
+        }
+
+        ContactService.remove(contact._id)
+          .then(fetchContacts)
+          .then(function() {
+            toastr.info('Contact removed: ' + contact.firstName);
+          })
+          .catch(promiseLogError);
+      };
+
       $scope.isSelected = function(contact) {
         return $scope.contact && $scope.contact._id === contact._id;
       };
