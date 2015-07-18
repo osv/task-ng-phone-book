@@ -29,6 +29,7 @@ var Contact = new Schema({
   surName: {type: String},
   phone: {type: String},
   comment: { type: String },
+  photo: {type: String},
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
 });

@@ -12,6 +12,7 @@ var create_contact =  function(contact, cb) {
   newContact.firstName = contact.firstName;
   newContact.surName = contact.surName;
   newContact.phone = contact.phone;
+  newContact.photo = contact.photo;
   newContact.comment = contact.comment;
 
   newContact.save(function(err, data) {
@@ -108,75 +109,111 @@ exports.delete = function(req, res) {
     res.sendStatus(400);
   }
 
-  var query = db.contactModel.remove({_id: id, userId: userId});
 
-  query.remove(function(err) {
+  db.contactModel.findOneAndRemove({_id: id, userId: userId}, function(err, contact) {
     if (err) {
-  		console.log(err);
-  		return res.sendStatus(400);
-  	}
+      return res.sendStatus(500);
+    }
 
-    var contact_photo_fname = path.join(uploadDir, id + '.png');
-    fs.unlink(contact_photo_fname);
+    try {
+      var file_name = contact.photo,
+          contact_photo_fname = path.join(uploadDir, file_name);
+
+      fs.unlinkSync(contact_photo_fname);
+    } catch (e) {}
 
     return res.sendStatus(200);
   });
 };
 
+// upload and return contact entity
 exports.uploadPhoto = function(req, res) {
-  console.log(req.body, req.files);
   var files = req.files,
       tmpfile = files.file.path, // path where multipart middleware save
       userId = req.user.id,
       contact = req.body,
-      contact_id = contact._id;
+      contact_id = contact._id,
+      random_file = '' + (+ new Date()) + (Math.random() * 99999999).toFixed(),
+      new_contact_photo = random_file + '.png',
+      new_photo_path = path.join(uploadDir, new_contact_photo);
 
-  // check if user is owner of this contact id, if so, remove file
-  var query = db.contactModel.findOne({_id: contact_id, userId: userId});
-  query.exec(function(err, result) {
-    if (err) {
-  		console.log(err);
-  		return res.sendStatus(400);
-  	}
+  // save file
+  try {
+    mkdirp.sync(uploadDir);
 
-    if (!result) {
-      return res.sendStatus(400);
-    }
+    //TODO: convert image to png, crop, etc
 
-    var contact_photo_fname = path.join(uploadDir, contact_id + '.png');
+    fs.renameSync(tmpfile, new_photo_path);
+  } catch (e) {
+    return res.sendStatus(500);
+  }
 
-    try {
-      mkdirp.sync(uploadDir);
+  // now save in database contact.photo
 
-      //TODO: convert image to png, crop, etc
+  if (! contact_id) {
+    // if no "_id" then need to create new contact
 
-      fs.renameSync(tmpfile, contact_photo_fname);
-      res.sendStatus(200);
-    } catch (e) {
-      res.sendStatus(500);
-    }
-  });
+    contact.userId = userId;
+    contact.photo = new_contact_photo;
+    create_contact(contact, function(err, newContact) {
+      if (err) {
+        // remove saved file
+        try { fs.unlinkSync(new_contact_photo); } catch(e) {}
+        return res.sendStatus(500);
+      } else {
+        return res.json(200, {_id: newContact._id, photo: new_contact_photo, isNew: true});
+      }
+    });
+
+  } else {
+    // if exist _id, update contact.photo
+    var old_photo = contact.photo,
+        query = {_id: contact_id, userId: userId},
+        modifier = {$set: {photo: new_contact_photo}},
+        options = {};
+
+    db.contactModel.update(query,
+                           modifier,
+                           options,
+                           function(err, data) {
+                             if (err || ! data.nModified) {
+                               // unlink new file if err or no updated
+                               try { fs.unlinkSync(new_photo_path); } catch(e) {}
+                               return res.sendStatus(500);
+                             }
+                             // saved, now unlink old
+                             try {
+                               if (old_photo) {
+                                 var old_photo_path = path.join(uploadDir, old_photo);
+                                 fs.unlinkSync(old_photo_path);
+                               }
+                             } catch(e) {}
+
+                             return res.json(200,
+                                             {_id: contact_id, photo: new_contact_photo});
+                           });
+  }
 };
 
 exports.deletePhoto = function(req, res) {
   var id = req.params.id,       // contact id
-      userId = req.user.id,
-      contact_photo_fname = path.join(uploadDir, id + '.png');
+      userId = req.user.id;
 
   // check if user is owner of this id, if so, remove file
   var query = db.contactModel.findOne({_id: id, userId: userId});
-  query.exec(function(err, result) {
+  query.select('photo');
+  query.exec(function(err, contact) {
     if (err) {
-  		console.log(err);
   		return res.sendStatus(400);
   	}
 
-    if (!result) {
+    if (!contact) {
       return res.sendStatus(400);
     }
 
     try {
-      console.log('unlink ' + contact_photo_fname);
+      var file_name = contact.photo,
+          contact_photo_fname = path.join(uploadDir, file_name);
 
       fs.unlinkSync(contact_photo_fname);
     } catch (e) {
