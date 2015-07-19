@@ -40,6 +40,6 @@ server {
 
 ## TODO
 
-- [ ] Json web token automatic expiration of prolongation
-- [ ] Test
+- [ ] Json web token automatic prolongation of expiration
+- [ ] Tests
 - [ ] Optional redis storage for JWT tokens (now in-memory storage used).
