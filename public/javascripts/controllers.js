@@ -3,7 +3,9 @@ angular.module('app').
   controller('loginCtrl', [
     '$scope', '$location', 'AuthenticationService', 'UserService',
     function($scope, $location, AuthenticationService, UserService) {
-      $scope.signIn = function(username, password) {
+      $scope.signIn = function() {
+        var username = $('#inputUsername').val(),
+            password = $('#inputPassword').val();
 
         UserService.signIn(username, password)
           .then(function(res) {
