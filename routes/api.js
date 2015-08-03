@@ -3,7 +3,7 @@ var express = require('express'),
     multipartMiddleware = multipart(),
     config = require('../config/config.js'),
     secretKey = config.secret,
-    jwt = require('express-jwt'),
+    jwt = require('express-jwt')({secret: secretKey}),
     tokenManager = require('../config/token_manager.js'),
     userRoute = require('./ctrl_api_user.js'),
     contactRoute = require('./ctrl_api_contacts.js'),
@@ -27,30 +27,30 @@ router.
   post('/user/signin',   userRoute.signin).
 
   // remove saved token if signed in
-  get('/user/logout',    jwt({secret: secretKey}), userRoute.logout);
+  get('/user/logout',    jwt, userRoute.logout);
 
 router.
   // create new contact
-  post('/contacts',      jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.create).
+  post('/contacts',      jwt, tokenManager.verifyToken, contactRoute.create).
 
   // get array of contatcs. Fields: _id, firstName, surName
-  get('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.list).
+  get('/contacts',       jwt, tokenManager.verifyToken, contactRoute.list).
 
   // Get contact by id
-  get('/contacts/:id',   jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.read).
+  get('/contacts/:id',   jwt, tokenManager.verifyToken, contactRoute.read).
 
   // Update contact
-  put('/contacts',       jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.update).
+  put('/contacts',       jwt, tokenManager.verifyToken, contactRoute.update).
 
   // remove contact by id
-  delete('/contacts/:id', jwt({secret: secretKey}), tokenManager.verifyToken, contactRoute.delete);
+  delete('/contacts/:id', jwt, tokenManager.verifyToken, contactRoute.delete);
 
 router.
   // upload image. body - contact object. return _id, photo, isNew - true if new created contact
-  post('/upload', jwt({secret: secretKey}), tokenManager.verifyToken,
+  post('/upload', jwt, tokenManager.verifyToken,
        multipartMiddleware, contactRoute.uploadPhoto).
 
-  delete('/upload/:id', jwt({secret: secretKey}), tokenManager.verifyToken,
+  delete('/upload/:id', jwt, tokenManager.verifyToken,
          contactRoute.deletePhoto);
 
 module.exports = router;
