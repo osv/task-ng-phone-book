@@ -72,30 +72,20 @@ angular.module('appServices', [])
       };
     }])
 
-  .factory('ContactService', [
+  .factory('Contacts', [
+    '$resource',
+    function($resource) {
+      return $resource(REST_URL + '/api/contacts/:id', {}, {
+        update: {
+          method: 'PUT'
+        }});
+    }
+  ])
+
+  .factory('UploadsService', [
     '$http', 'Upload',
     function($http, Upload) {
       return {
-        create: function(contact) {
-          return $http.post(REST_URL + '/api/contacts', {contact: contact});
-        },
-
-        list: function() {
-          return $http.get(REST_URL + '/api/contacts');
-        },
-
-        read: function(id) {
-          return $http.get(REST_URL + '/api/contacts/' + id);
-        },
-
-        update: function(contact) {
-          return $http.put(REST_URL + '/api/contacts', {contact: contact});
-        },
-
-        remove: function(id) {
-          return $http['delete'](REST_URL + '/api/contacts/' + id);
-        },
-
         removePhoto: function(id) {
           return $http['delete'](REST_URL + '/api/upload/' + id);
         },

@@ -49,16 +49,16 @@ angular.module('app').
     }])
 
   .controller('contactCtrl', [
-    '$scope', 'ContactService',
-    function($scope, ContactService) {
+    '$scope', 'UploadsService', 'Contacts',
+    function($scope, UploadsService, Contacts) {
       $scope.contacts = [];
 
       // promise for fetch contact list, we reuse it later in this controller
       var fetchContacts = function() {
-        return ContactService.list()
+        return Contacts.query().$promise
         .then(function(res) {
-          $scope.contacts = res.data;
-          console.log(res.data);
+          $scope.contacts = res;
+          console.log(res);
         })
         .catch(promiseLogError);
       };
@@ -67,11 +67,14 @@ angular.module('app').
 
       // on selecect from contact list: fetch full contact data
       $scope.select = function(id) {
-        ContactService.read(id)
-          .then(function(res) {
-            var contact = res.data;
+        var updateContactFields = function(res) {
+            var contact = res;
             $scope.contact = contact;
-          })
+        };
+
+        Contacts.get({id: id})
+          .$promise
+          .then(updateContactFields)
           .catch(promiseLogError);
       };
 
@@ -87,12 +90,14 @@ angular.module('app').
           return;
         }
 
-        ContactService.remove(contact._id)
+        var clearContacts = function() {
+          $scope.contact = {}; // clear model, TODO: maybe select first contact?
+          toastr.info('Contact removed: ' + contact.firstName);
+        };
+
+        Contacts.remove({id: contact._id}).$promise
           .then(fetchContacts)
-          .then(function() {
-            $scope.contact = {}; // clear model, TODO: maybe select first contact?
-            toastr.info('Contact removed: ' + contact.firstName);
-          })
+          .then(clearContacts)
           .catch(promiseLogError);
       };
 
@@ -103,24 +108,31 @@ angular.module('app').
       $scope.isNew = function() {
         return ! ($scope.contact && $scope.contact.hasOwnProperty('_id'));
       };
+
       $scope.saveContact = function() {
-        var contact = $scope.contact;
+        var contact = $scope.contact,
+            $id = contact._id;
 
         // Update or create contact depend in existing "_id" property of contact
-        if (contact._id) {
-          ContactService.update(contact)
-            .then(fetchContacts)
-            .then(function() {
+        if ($id) {
+          var showMessage = function() {
               toastr.success('Updated contact of ' + contact.firstName);
-            })
+          };
+
+          Contacts.update({id: $id}, contact).$promise
+            .then(fetchContacts)
+            .then(showMessage)
             .catch(promiseLogError);
         } else {
-          ContactService.create(contact)
-            .then(fetchContacts)
-            .then(function(res) {
+
+          var showMessage = function() {
               $scope.contact = {};              // clear model
               toastr.success('Contact "' + contact.firstName + '" saved');
-            })
+          };
+
+          Contacts.save(contact).$promise
+            .then(fetchContacts)
+            .then(showMessage)
             .catch(promiseLogError);
         }
       };
@@ -133,7 +145,7 @@ angular.module('app').
           return;
         }
 
-        ContactService.uploadPhoto(file, contact)
+        UploadsService.uploadPhoto(file, contact)
           .then(function(res) {
 
             // update current contact with new retrieved data
@@ -155,7 +167,7 @@ angular.module('app').
       $scope.removePhoto = function() {
         var contact = $scope.contact;
         if (contact && contact._id) {
-          ContactService.removePhoto(contact._id)
+          UploadsService.removePhoto(contact._id)
             .then(function() {
               $scope.contact.photo = '';
               toastr.info('Photo removed');
