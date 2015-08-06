@@ -25,8 +25,8 @@ var User = new Schema({
 
 var Contact = new Schema({
   userId: {type: Schema.Types.ObjectId, required: true}, // ref to user
-  firstName: { type: String, required: true },
-  surName: {type: String},
+  firstName: { type: String, required: true, trim: true },
+  surName: {type: String, trim: true},
   phone: {type: String},
   comment: { type: String },
   photo: {type: String},
