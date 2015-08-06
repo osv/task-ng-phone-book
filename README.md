@@ -2,6 +2,8 @@
 
 Phone book example using Angular, Express, MongoDB.
 
+This branch use $resource as REST accessor.
+
 ## Configuration
 
 See demo http://phone-book.ononos.tk user **demo**, password **demo** or create own account.
