@@ -27,7 +27,7 @@ var create_contact =  function(contact, cb) {
 exports.create = function(req, res) {
 
   var userId = req.user.id,        // user is restored from jwt sign
-      contact = req.body.contact;
+      contact = req.body;
 
   if (contact.firstName == null) {
     return res.sendStatus(400);
@@ -68,6 +68,7 @@ exports.read = function(req, res) {
   }
 
   var query = db.contactModel.findOne({_id: id, userId: userId});
+  query.select('_id firstName surName phone comment photo created updated');
   query.exec(function(err, result) {
     if (err) {
   		console.log(err);
@@ -83,7 +84,8 @@ exports.read = function(req, res) {
 };
 
 exports.update = function(req, res) {
-  var contact = req.body.contact,
+  var contact = req.body,
+      contact_id = req.params.id,
       userId = req.user.id;
 
   if (!contact || contact.firstName == null) {
@@ -92,7 +94,11 @@ exports.update = function(req, res) {
 
   contact.updated = new Date();
 
-  db.contactModel.findOneAndUpdate({_id: contact._id, userId: userId}, contact, function(err) {
+  // exclude some fields that can't be modified
+  delete contact._id;
+  delete contact.created;
+
+  db.contactModel.findOneAndUpdate({_id: contact_id, userId: userId}, contact, function(err) {
     if (err) {
   		console.log(err);
   		return res.sendStatus(400);

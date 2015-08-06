@@ -40,7 +40,7 @@ router.
   get('/contacts/:id',   jwt, tokenManager.verifyToken, contactRoute.read).
 
   // Update contact
-  put('/contacts',       jwt, tokenManager.verifyToken, contactRoute.update).
+  put('/contacts/:id',   jwt, tokenManager.verifyToken, contactRoute.update).
 
   // remove contact by id
   delete('/contacts/:id', jwt, tokenManager.verifyToken, contactRoute.delete);
