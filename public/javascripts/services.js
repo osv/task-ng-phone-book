@@ -109,4 +109,17 @@ angular.module('appServices', [])
         }
       };
     }
-  ]);
+  ])
+
+// used in "catch" of promise to log error
+  .factory('promiseLogError', [
+    'toastr',
+    function(toastr) {
+        return function(error) {
+          var status = error.status,
+              message = error.statusText;
+
+          toastr.error('<b>' + status + '</b> ' + message);
+          console.warn(status, message);
+        };
+    }]);

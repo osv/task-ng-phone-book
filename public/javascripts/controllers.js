@@ -1,8 +1,8 @@
 angular.module('app').
 
   controller('loginCtrl', [
-    '$scope', '$location', 'AuthenticationService', 'UserService',
-    function($scope, $location, AuthenticationService, UserService) {
+    '$scope', '$location', 'AuthenticationService', 'UserService', 'toastr', 'promiseLogError',
+    function($scope, $location, AuthenticationService, UserService, toastr, promiseLogError) {
       $scope.signIn = function() {
         var username = $('#inputUsername').val(),
             password = $('#inputPassword').val();
@@ -49,8 +49,8 @@ angular.module('app').
     }])
 
   .controller('contactCtrl', [
-    '$scope', 'ContactService',
-    function($scope, ContactService) {
+    '$scope', 'ContactService', 'toastr', 'promiseLogError',
+    function($scope, ContactService, toastr, promiseLogError) {
       $scope.contacts = [];
 
       // promise for fetch contact list, we reuse it later in this controller
