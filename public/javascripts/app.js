@@ -1,20 +1,10 @@
 'use strict';
+/* global toastr:false */
 
-$.extend(toastr.options, {
-  progressBar: true,
-});
+angular.module('app', ['ngRoute', 'ngResource', 'appServices', 'ngFileUpload'])
+  .constant('toastr', toastr)
 
-// use this in "catch" of promise
-var promiseLogError = function(error) {
-  var status = error.status,
-      message = error.statusText;
-
-  toastr.error('<b>' + status + '</b> ' + message);
-  console.warn(status, message);
-};
-
-angular.module('app', ['ngRoute', 'ngResource', 'appServices', 'ngFileUpload']).
-  config(['$routeProvider', function($routeProvider) {
+  .config(['$routeProvider', function($routeProvider) {
     $routeProvider.
       when('/login', {
         templateUrl: '/partials/login.form.html',
@@ -29,6 +19,13 @@ angular.module('app', ['ngRoute', 'ngResource', 'appServices', 'ngFileUpload']).
         controller: 'contactCtrl',
         access: { requiredAuthentication: true }
       });
+  }])
+
+  .config(['toastr', function(toastr) {
+    /* global toastr:false, moment:false */
+    $.extend(toastr.options, {
+      progressBar: true,
+    });
   }])
 
   .config(['$httpProvider', function ($httpProvider) {
