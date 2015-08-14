@@ -1,8 +1,8 @@
 angular.module('app').
 
   controller('loginCtrl', [
-    '$scope', '$location', 'AuthenticationService', 'UserService', 'toastr', 'promiseLogError',
-    function($scope, $location, AuthenticationService, UserService, toastr, promiseLogError) {
+    '$scope', 'AuthenticationService', 'UserService', 'toastr', 'promiseLogError',
+    function($scope, AuthenticationService, UserService, toastr, promiseLogError) {
       $scope.signIn = function() {
         var username = $('#inputUsername').val(),
             password = $('#inputPassword').val();

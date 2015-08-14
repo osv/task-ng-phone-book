@@ -1,6 +1,6 @@
 <ul class="list-group">
   <li class="list-group-item" ng-class="{'active':isSelected(contact)}" ng-repeat="contact in contacts">
-    <a ng-click="select(contact._id)" href="#/">
+    <a ng-click="select(contact._id)" ui-sref="home">
       <p class="list-group-item-text">{{contact | formatContact}}</p>
     </a>
   </li>

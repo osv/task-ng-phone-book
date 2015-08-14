@@ -2,8 +2,10 @@ var REST_URL = ''; // maybe need it to be configurable ex.: 'http://localhost:30
 
 angular.module('appServices', [])
   .factory('AuthenticationService', [
-    '$window', '$location',
-    function($window, $location) {
+    '$window', '$injector',
+    function($window, $injector) {
+      var $rootScope = $injector.get('$rootScope');
+
       var getToken = function() {
         return $window.localStorage.token;
       };
@@ -19,13 +21,13 @@ angular.module('appServices', [])
         login: function(username, token) {
           $window.localStorage.token = token;
           $window.localStorage.username = username;
-          $location.path('/');
+          $rootScope.$state.go('home');
         },
 
         logout: function() {
           delete $window.localStorage.token;
           delete $window.localStorage.username;
-          $location.path('/login');
+          $rootScope.$state.go('login');
         },
       };
 
